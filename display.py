@@ -43,7 +43,7 @@ else:
     ina = None
 
 # 128x32 display with hardware I2C:
-disp = ssd1306.SSD1306_128_32(rst=None, i2c_bus=1, gpio=1) # setting gpio to 1 is hack to avoid platform detection
+disp = ssd1306.SSD1306_128_32(i2c_bus=1) # setting gpio to 1 is hack to avoid platform detection
 
 # Initialize library.
 disp.begin()
