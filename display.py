@@ -27,9 +27,8 @@ import Adafruit_SSD1306
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
-from jetbot.utils.utils import get_ip_address
-from jetbot import ads1115
-from jetbot import ina219
+import ads1115
+import ina219
 import os
 import subprocess
 
@@ -137,13 +136,13 @@ while True:
         draw.text((x, top+25),    str(Disk.decode('utf-8')),  font=font, fill=255)
     elif(ads != None):
         value=ads.readVoltage(4)/1000.0
-        draw.text((x, top),       "eth0: " + str(get_ip_address('eth0')),  font=font, fill=255)
-        draw.text((x, top+8),     "wlan0: " + str(get_ip_address('wlan0')), font=font, fill=255)
+        draw.text((x, top),       "eth0: " + str(ip_address('eth0')),  font=font, fill=255)
+        draw.text((x, top+8),     "wlan0: " + str(ip_address('wlan0')), font=font, fill=255)
         draw.text((x, top+16),    str(MemUsage.decode('utf-8')),  font=font, fill=255)
         draw.text((x, top+25),    str(Disk.decode('utf-8')) + (" %.1f")%value,  font=font, fill=255)
     else:
-        draw.text((x, top),       "eth0: " + str(get_ip_address('eth0')),  font=font, fill=255)
-        draw.text((x, top+8),     "wlan0: " + str(get_ip_address('wlan0')), font=font, fill=255)
+        draw.text((x, top),       "eth0: " + str(ip_address('eth0')),  font=font, fill=255)
+        draw.text((x, top+8),     "wlan0: " + str(ip_address('wlan0')), font=font, fill=255)
         draw.text((x, top+16),    str(MemUsage.decode('utf-8')),  font=font, fill=255)
         draw.text((x, top+25),    str(Disk.decode('utf-8')),  font=font, fill=255)
     # Display image.

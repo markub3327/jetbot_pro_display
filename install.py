@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 # Copyright (c) 2019, NVIDIA CORPORATION. All rights reserved.
 # Copyright (c) 2024 UPTI FPV UCM
 # Author: Martin Kubovcik
