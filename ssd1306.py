@@ -103,7 +103,6 @@ class SSD1306Base(object):
         # Save vcc state.
         self._vccstate = vccstate
         # Reset and initialize display.
-        self.reset()
         self._initialize()
         # Turn on the display.
         self.command(SSD1306_DISPLAYON)
