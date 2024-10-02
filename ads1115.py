@@ -50,34 +50,36 @@ ADS1115_CONFIG_CLAT_LATCH = 0x04  # Latching comparator
 ADS1115_CONFIG_CQUE_1CONV = 0x00  # Assert ALERT/RDY after one conversions
 ADS1115_CONFIG_CQUE_2CONV = 0x01  # Assert ALERT/RDY after two conversions
 ADS1115_CONFIG_CQUE_4CONV = 0x02  # Assert ALERT/RDY after four conversions
-ADS1115_CONFIG_CQUE_NONE = 0x03  # Disable the comparator and put ALERT/RDY in high state (default)
+ADS1115_CONFIG_CQUE_NONE = (
+    0x03  # Disable the comparator and put ALERT/RDY in high state (default)
+)
 
 
 class ADS1115(object):
 
     def __init__(self, address=0x48):
-        self.bus = smbus.SMBus(1);
-        self.addr = address;
-        self.channel = 0;
-        self.gain = ADS1115_CONFIG_PGA_4_096V;
-        self.coefficient = 0.125;
+        self.bus = smbus.SMBus(1)
+        self.addr = address
+        self.channel = 0
+        self.gain = ADS1115_CONFIG_PGA_4_096V
+        self.coefficient = 0.125
 
     def setGain(self, gain):
-        self.gain = gain;
+        self.gain = gain
         if gain == ADS1115_CONFIG_PGA_6_144V:
             self.coefficient = 0.1875
-        elif mygain == ADS1115_CONFIG_PGA_4_096V:
+        elif gain == ADS1115_CONFIG_PGA_4_096V:
             self.coefficient = 0.125
-        elif mygain == ADS1115_CONFIG_PGA_2_048V:
+        elif gain == ADS1115_CONFIG_PGA_2_048V:
             self.coefficient = 0.0625
-        elif mygain == ADS1115_CONFIG_PGA_1_024V:
+        elif gain == ADS1115_CONFIG_PGA_1_024V:
             self.coefficient = 0.03125
-        elif mygain == ADS1115_CONFIG_PGA_0_512V:
+        elif gain == ADS1115_CONFIG_PGA_0_512V:
             self.coefficient = 0.015625
-        elif mygain == ADS1115_CONFIG_PGA_0_256V:
+        elif gain == ADS1115_CONFIG_PGA_0_256V:
             self.coefficient = 0.0078125
         else:
-            self.gain = ADS1115_CONFIG_PGA_4_096V;
+            self.gain = ADS1115_CONFIG_PGA_4_096V
             self.coefficient = 0.125
 
     def setChannel(self, channel):
@@ -117,14 +119,18 @@ class ADS1115(object):
 
         self.setChannel(channel)
         CONFIG_REG = [
-            ADS1115_CONFIG_OS_SINGLE | (self.channel << 4) | ADS1115_CONFIG_PGA_4_096V | ADS1115_CONFIG_MODE_CONTIN,
-            ADS1115_CONFIG_DR_128SPS | ADS1115_CONFIG_CQUE_NONE]
+            ADS1115_CONFIG_OS_SINGLE
+            | (self.channel << 4)
+            | ADS1115_CONFIG_PGA_4_096V
+            | ADS1115_CONFIG_MODE_CONTIN,
+            ADS1115_CONFIG_DR_128SPS | ADS1115_CONFIG_CQUE_NONE,
+        ]
         bus.write_i2c_block_data(self.addr, ADS1115_REG_CONFIG, CONFIG_REG)
         time.sleep(0.1)
         return self.readValue()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     # Create an ADS1115 ADC (16-bit) instance.
     ads = ADS1115()

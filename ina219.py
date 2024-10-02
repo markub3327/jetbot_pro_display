@@ -22,12 +22,14 @@ _REG_CALIBRATION = 0x05
 
 class BusVoltageRange:
     """Constants for ``bus_voltage_range``"""
+
     RANGE_16V = 0x00  # set bus voltage range to 16V
     RANGE_32V = 0x01  # set bus voltage range to 32V (default)
 
 
 class Gain:
     """Constants for ``gain``"""
+
     DIV_1_40MV = 0x00  # shunt prog. gain set to  1, 40 mV range
     DIV_2_80MV = 0x01  # shunt prog. gain set to /2, 80 mV range
     DIV_4_160MV = 0x02  # shunt prog. gain set to /4, 160 mV range
@@ -36,6 +38,7 @@ class Gain:
 
 class ADCResolution:
     """Constants for ``bus_adc_resolution`` or ``shunt_adc_resolution``"""
+
     ADCRES_9BIT_1S = 0x00  # 9bit,   1 sample,     84us
     ADCRES_10BIT_1S = 0x01  # 10bit,   1 sample,    148us
     ADCRES_11BIT_1S = 0x02  # 11 bit,  1 sample,    276us
@@ -51,6 +54,7 @@ class ADCResolution:
 
 class Mode:
     """Constants for ``mode``"""
+
     POWERDOW = 0x00  # power down
     SVOLT_TRIGGERED = 0x01  # shunt voltage triggered
     BVOLT_TRIGGERED = 0x02  # bus voltage triggered
@@ -63,7 +67,7 @@ class Mode:
 
 class INA219:
     def __init__(self, i2c_bus=1, addr=0x40):
-        self.bus = smbus.SMBus(i2c_bus);
+        self.bus = smbus.SMBus(i2c_bus)
         self.addr = addr
 
         # Set chip to known config values to start
@@ -74,7 +78,7 @@ class INA219:
 
     def read(self, address):
         data = self.bus.read_i2c_block_data(self.addr, address, 2)
-        return ((data[0] * 256) + data[1])
+        return (data[0] * 256) + data[1]
 
     def write(self, address, data):
         temp = [0, 0]
@@ -84,8 +88,8 @@ class INA219:
 
     def set_calibration_32V_2A(self):
         """Configures to INA219 to be able to measure up to 32V and 2A of current. Counter
-           overflow occurs at 3.2A.
-           ..note :: These calculations assume a 0.1 shunt ohm resistor is present
+        overflow occurs at 3.2A.
+        ..note :: These calculations assume a 0.1 shunt ohm resistor is present
         """
         # By default we use a pretty huge range for the input voltage,
         # which probably isn't the most appropriate choice for system
@@ -114,7 +118,7 @@ class INA219:
         # 4. Choose an LSB between the min and max values
         #    (Preferrably a roundish number close to MinLSB)
         # CurrentLSB = 0.0001 (100uA per bit)
-        self._current_lsb = .1  # Current LSB = 100uA per bit
+        self._current_lsb = 0.1  # Current LSB = 100uA per bit
 
         # 5. Compute the calibration register
         # Cal = trunc (0.04096 / (Current_LSB * RSHUNT))
@@ -125,7 +129,7 @@ class INA219:
         # 6. Calculate the power LSB
         # PowerLSB = 20 * CurrentLSB
         # PowerLSB = 0.002 (2mW per bit)
-        self._power_lsb = .002  # Power LSB = 2mW per bit
+        self._power_lsb = 0.002  # Power LSB = 2mW per bit
 
         # 7. Compute the maximum current and shunt voltage values before overflow
         #
@@ -161,11 +165,13 @@ class INA219:
         self.bus_adc_resolution = ADCResolution.ADCRES_12BIT_32S
         self.shunt_adc_resolution = ADCResolution.ADCRES_12BIT_32S
         self.mode = Mode.SANDBVOLT_CONTINUOUS
-        self.config = self.bus_voltage_range << 13 | \
-                      self.gain << 11 | \
-                      self.bus_adc_resolution << 7 | \
-                      self.shunt_adc_resolution << 3 | \
-                      self.mode
+        self.config = (
+            self.bus_voltage_range << 13
+            | self.gain << 11
+            | self.bus_adc_resolution << 7
+            | self.shunt_adc_resolution << 3
+            | self.mode
+        )
         self.write(_REG_CONFIG, self.config)
 
     def getShuntVoltage_mV(self):
@@ -187,13 +193,15 @@ class INA219:
         return value * self._current_lsb
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     # Create an ADS1115 ADC (16-bit) instance.
     ina219 = INA219(addr=0x41)
     while True:
         bus_voltage = ina219.getBusVoltage_V()  # voltage on V- (load side)
-        shunt_voltage = ina219.getShuntVoltage_mV() / 1000  # voltage between V+ and V- across the shunt
+        shunt_voltage = (
+            ina219.getShuntVoltage_mV() / 1000
+        )  # voltage between V+ and V- across the shunt
         current = ina219.getCurrent_mA()  # current in mA
 
         # INA219 measure bus voltage on the load side. So PSU voltage = bus_voltage + shunt_voltage
