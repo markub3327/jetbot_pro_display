@@ -1,5 +1,6 @@
-import smbus
 import time
+
+import smbus
 
 # Config Register (R/W)
 _REG_CONFIG = 0x00

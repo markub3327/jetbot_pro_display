@@ -25,6 +25,8 @@ WantedBy=multi-user.target
 
 STATS_SERVICE_NAME = "jetbot_pro_display"
 
+# Pre-install steps
+# apt install python3-smbus python3-pil
 
 def get_stats_service():
     return STATS_SERVICE_TEMPLATE % (getpass.getuser(), os.environ['HOME'])
