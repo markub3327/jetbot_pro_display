@@ -28,7 +28,7 @@ STATS_SERVICE_NAME = "jetbot_pro_display"
 
 ## Pre-install steps
 # Configure Jetson
-subprocess.check_output("/bin/bash -c 'configure_jetson.sh'", shell=True)
+subprocess.check_output("/bin/bash configure_jetson.sh", shell=True)
 # Install dependencies
 subprocess.check_output("apt install python3-smbus python3-pil -y", shell=True)
 
